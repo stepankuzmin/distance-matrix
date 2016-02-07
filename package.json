@@ -1,0 +1,19 @@
+{
+  "name": "distance-matrix",
+  "version": "1.0.0",
+  "description": "Calculates distance matrix of arbitrary size using The Open Source Routing Machine",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --max_old_space_size=2048 index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stepan Kuzmin (stepankuzmin.ru)",
+  "license": "MIT",
+  "dependencies": {
+    "async": "1.5.2",
+    "js-combinatorics": "0.5.0",
+    "minimist": "1.2.0",
+    "osrm": "4.9.1",
+    "turf": "2.0.2"
+  }
+}
