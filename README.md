@@ -12,6 +12,14 @@ npm install
 
 ## Usage
 
+Set up database connection in `db/config.js`, then run migrations
+
 ```shell
-node --max_old_space_size=2048 index.js moscow_russia.osrm
+npm run db:migrate
+```
+
+Calculate distance matrix with
+
+```shell
+node --max_old_space_size=4096 index.js moscow.osrm
 ```

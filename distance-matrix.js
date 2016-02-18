@@ -1,66 +1,69 @@
-var fs = require('fs')
-var async = require('async')
+var R = require('ramda')
 var OSRM = require('osrm')
-var Combinatorics = require('js-combinatorics')
+var async = require('async')
 
-// compare arrays
-function eq(a1, a2) {
- return (a1.length == a2.length) && a1.every(function(element, index) {
-    return element === a2[index]
- })
-}
+module.exports = function distance_matrix(opts) {
+  var knex = opts.knex
+  var points = opts.points
+  var chunkSize = opts.chunkSize
+  var osrm_path = opts.osrm_path
 
-var matrixStream = fs.createWriteStream('matrix.tsv')
-matrixStream.write('source\tdestination\ttime\n')
+  var ids = R.range(0, points.length)
+  var xprod = R.compose(R.converge(R.xprod, [R.identity, R.identity]), R.splitEvery(chunkSize))
 
-module.exports = function calculate(osrm_path, points) {
-  console.log('points.length', points.length)
-
-  console.time('calculate')
+  var combinations = xprod(ids)
   var osrm = new OSRM(osrm_path)
-  var combinations = Combinatorics.combination(points, 500)
 
-  var row
-  var matrix = []
-  var source, destination, options
+  var options = {}
+  var matrixInserts = []
+  var sourceId, destinationId
 
-  var tasks = combinations.toArray().map(function createTask(combination) {
+  var tasks = combinations.map(function createTask(combination) {
+    options = {
+      sources: combination[0].map(function (id) { return points[id]}),
+      destinations: combination[1].map(function (id) { return points[id]})
+    }
+
+    matrixInserts = []
     return function task(callback) {
-      options = { coordinates: combination }
       osrm.table(options, function(error, table) {
         if (error) {
           callback(error)
         } else {
-          for (i = 0; i < table.source_coordinates.length; i++) {
-            for (j = 0; j < table.destination_coordinates.length; j++) {
-              source = table.source_coordinates[i]
-              destination = table.destination_coordinates[j]
-              time = table.distance_table[i][j]/600
-              if (!eq(source, destination)) {
-                row = source + '\t' + destination + '\t' + time + '\n'
-                matrix.push([source, destination, time])
-                matrixStream.write(row)
-                process.stdout.write(row)
+          for (srcIndex = 0; srcIndex < table.source_coordinates.length; srcIndex++) {
+            for (dstIndex = 0; dstIndex < table.destination_coordinates.length; dstIndex++) {
+              sourceId = combination[0][srcIndex]
+              destinationId = combination[1][dstIndex]
+              if (sourceId != destinationId) {
+                time = table.distance_table[srcIndex][dstIndex]/600
+                matrixInserts.push({
+                  source_id: sourceId,
+                  destination_id: destinationId,
+                  time: time
+                })
               }
             }
           }
-          callback(null, matrix)
+
+          knex.raw(knex('foot_matrix').insert(matrixInserts).toString()).then(function (rows) {
+            callback(null, 'ok')
+          }).catch(function (error) {
+            callback(error)
+          })
         }
       })
     }
   })
 
+  console.time('foot_matrix')
   async.series(tasks, function process(error, results) {
-    matrixStream.end()
-
     if (error) {
-      console.error('Error: ', error)
-      return -1
+      throw error
     }
 
-    console.timeEnd('calculate')
-
-    // var matrix = [].concat.apply([], results)
-    // console.log('Results', JSON.stringify(matrix, null, 2))
+    console.timeEnd('foot_matrix')
+    knex.destroy(function() {
+      console.log('Done!')
+    })
   })
 }

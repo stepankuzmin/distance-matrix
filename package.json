@@ -5,15 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "node --max_old_space_size=2048 index.js",
+    "db:migrate": "knex migrate:latest --knexfile ./db/config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stepan Kuzmin (stepankuzmin.ru)",
   "license": "MIT",
   "dependencies": {
     "async": "1.5.2",
-    "js-combinatorics": "0.5.0",
+    "knex": "0.10.0",
     "minimist": "1.2.0",
     "osrm": "4.9.1",
+    "pg": "4.4.6",
+    "ramda": "0.19.1",
     "turf": "2.0.2"
   }
 }
