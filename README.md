@@ -1,6 +1,6 @@
 # OSRM distance matrix
 
-Calculates arbitrary size distance matrix using The Open Source Routing Machine
+Calculate large distance matrix using [The Open Source Routing Machine](http://project-osrm.org/)
 
 ## Installation
 
@@ -12,14 +12,4 @@ npm install
 
 ## Usage
 
-Set up database connection in `db/config.js`, then run migrations
-
-```shell
-npm run db:migrate
-```
-
-Calculate distance matrix with
-
-```shell
-node --max_old_space_size=4096 index.js moscow.osrm
-```
+See the `examples/tsv/index.js` for examples of calculating large distance matrices.

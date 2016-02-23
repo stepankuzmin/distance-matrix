@@ -1,53 +1,66 @@
-var turf = require('turf')
-var minimist = require('minimist')
-var distance_matrix = require('./distance-matrix')
+var R = require('ramda')
+var OSRM = require('osrm')
+var async = require('async')
 
-var dbconfig = require('./db/config.js')
-var knex = require('knex')(dbconfig.development)
+module.exports = function distance_matrix(options, callback) {
+  var points = options.points
+  var chunkSize = options.chunkSize
+  var osrm_path = options.osrm_path
+  var flow = options.flow || 'series'
 
-// var bbox = [37.606,55.731,37.640,55.752],
-var bbox = [37.35,55.56,37.87,55.94], // moscow
-    cellWidth = 0.1,
-    units = 'kilometers'
+  var taskCallback = options.taskCallback || function(matrix, callback) {
+    callback(null, matrix)
+  }
 
-var config = minimist(process.argv.slice(2))
-if (config.version) {
-  console.log(require('./package.json').version)
-  process.exit(0)
-}
+  // xprod of point ids
+  var xprod = R.compose(
+    R.converge(R.xprod, [R.identity, R.identity]),
+    R.splitEvery(chunkSize),
+    R.range(0),
+    R.length
+  )
 
-if (config._ < 1) {
-  console.error('Error: OSRM file not specified')
-  process.exit(-1)
-}
+  var combinations = xprod(points)
+  var osrm = new OSRM(osrm_path)
 
-var osrm_path = config._[0]
-
-console.time('foot_grid')
-var points = []
-var gridInserts = []
-var hexGrid = turf.hexGrid(bbox, cellWidth, units)
-
-hexGrid.features.forEach(function (feature, index) {
-  var centroid = turf.centroid(feature)
-  var coordinates = centroid.geometry.coordinates
-  gridInserts.push({
-    id: index,
-    cell: knex.raw("ST_SetSRID(ST_GeomFromGeoJSON('"+JSON.stringify(feature.geometry)+"'), 4326)"),
-    centroid: knex.raw("ST_GeomFromText('POINT("+coordinates[1]+" "+coordinates[0]+")', 4326)")
+  var matrix = []
+  var sources, destinations, srcIndex, dstIndex, sourceId, destinationId
+  var tasks = combinations.map(function (combination) {
+    sources = combination[0].map(function (id) { return points[id] })
+    destinations = combination[1].map(function (id) { return points[id] })
+    return function task(callback) {
+      osrm.table({ sources: sources, destinations: destinations }, function(error, table) {
+        if (error) {
+          callback(error)
+        } else {
+          matrix = []
+          for (srcIndex = 0; srcIndex < table.source_coordinates.length; srcIndex++) {
+            for (dstIndex = 0; dstIndex < table.destination_coordinates.length; dstIndex++) {
+              sourceId = combination[0][srcIndex]
+              destinationId = combination[1][dstIndex]
+              if (sourceId != destinationId) {
+                matrix.push([
+                  sourceId,
+                  destinationId,
+                  table.distance_table[srcIndex][dstIndex]
+                ])
+              }
+            }
+          }
+          taskCallback(matrix, callback)
+        }
+      })
+    }
   })
-  points.push([coordinates[1], coordinates[0]])
-})
 
-knex.raw(knex('foot_grid').insert(gridInserts).toString()).then(function() {
-  console.timeEnd('foot_grid')
-
-  distance_matrix({
-    knex: knex,
-    points: points,
-    chunkSize: 500,
-    osrm_path: osrm_path
-  })
-}).catch(function(error) {
-  throw error
-})
+  switch (flow) {
+    case 'series':
+      async.series(tasks, callback)
+      break
+    case 'parallel':
+      async.parallel(tasks, callback)
+      break
+    default:
+      async.series(tasks, callback)
+  }
+}
