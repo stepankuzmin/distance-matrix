@@ -4,6 +4,7 @@
   "description": "Calculate large distance matrix using The Open Source Routing Machine",
   "main": "index.js",
   "scripts": {
+    "start": "node --optimize_for_size --max_old_space_size=2048 --gc_interval=100 index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.ru)",

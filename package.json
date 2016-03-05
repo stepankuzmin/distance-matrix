@@ -4,7 +4,8 @@
   "description": "Calculate large distance matrix using The Open Source Routing Machine",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "node test/index.js"
   },
   "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.ru)",
   "license": "ICS",
@@ -14,6 +15,11 @@
     "ramda": "0.19.1"
   },
   "devDependencies": {
-    "tape": "4.4.0"
+    "eslint": "2.3.0",
+    "eslint-config-mourner": "2.0.0",
+    "tape": "4.5.0"
+  },
+  "engines": {
+    "node": ">=0.10 <=0.12"
   }
 }

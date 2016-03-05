@@ -1,5 +1,7 @@
 # OSRM distance matrix
 
+[![Build Status](https://travis-ci.org/stepankuzmin/distance-matrix.svg?branch=master)](https://travis-ci.org/stepankuzmin/distance-matrix)
+
 Calculate large distance matrix using [The Open Source Routing Machine](http://project-osrm.org/)
 
 ## Installation

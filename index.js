@@ -1,16 +1,18 @@
-var R = require('ramda')
-var OSRM = require('osrm')
-var async = require('async')
+'use strict';
 
-module.exports = function distance_matrix(options, callback) {
-  var points = options.points
-  var chunkSize = options.chunkSize
-  var osrm_path = options.osrm_path
-  var flow = options.flow || 'series'
+var R = require('ramda');
+var OSRM = require('osrm');
+var async = require('async');
 
-  var taskCallback = options.taskCallback || function(matrix, callback) {
-    callback(null, matrix)
-  }
+module.exports = function distanceMatrix(options, callback) {
+  var points = options.points;
+  var chunkSize = options.chunkSize || points.length;
+  var osrmPath = options.osrmPath;
+  var flow = options.flow || 'series';
+
+  var taskCallback = options.taskCallback || function taskCallback(matrix, callback) {
+    callback(null, matrix);
+  };
 
   // xprod of point ids
   var xprod = R.compose(
@@ -18,49 +20,49 @@ module.exports = function distance_matrix(options, callback) {
     R.splitEvery(chunkSize),
     R.range(0),
     R.length
-  )
+  );
 
-  var combinations = xprod(points)
-  var osrm = new OSRM(osrm_path)
+  var combinations = xprod(points);
+  var osrm = new OSRM(osrmPath);
 
-  var matrix = []
-  var sources, destinations, srcIndex, dstIndex, sourceId, destinationId
-  var tasks = combinations.map(function (combination) {
-    sources = combination[0].map(function (id) { return points[id] })
-    destinations = combination[1].map(function (id) { return points[id] })
+  var matrix = [];
+  var sources, destinations, srcIndex, dstIndex, sourceId, destinationId;
+  var tasks = combinations.map(function createTask(combination) {
+    sources = combination[0].map(function (id) { return points[id]; });
+    destinations = combination[1].map(function (id) { return points[id]; });
     return function task(callback) {
-      osrm.table({ sources: sources, destinations: destinations }, function(error, table) {
+      osrm.table({sources: sources, destinations: destinations}, function (error, table) {
         if (error) {
-          callback(error)
+          callback(error);
         } else {
-          matrix = []
+          matrix = [];
           for (srcIndex = 0; srcIndex < table.source_coordinates.length; srcIndex++) {
             for (dstIndex = 0; dstIndex < table.destination_coordinates.length; dstIndex++) {
-              sourceId = combination[0][srcIndex]
-              destinationId = combination[1][dstIndex]
-              if (sourceId != destinationId) {
+              sourceId = combination[0][srcIndex];
+              destinationId = combination[1][dstIndex];
+              if (sourceId !== destinationId) {
                 matrix.push([
                   sourceId,
                   destinationId,
                   table.distance_table[srcIndex][dstIndex]
-                ])
+                ]);
               }
             }
           }
-          taskCallback(matrix, callback)
+          taskCallback(matrix, callback);
         }
-      })
-    }
-  })
+      });
+    };
+  });
 
   switch (flow) {
-    case 'series':
-      async.series(tasks, callback)
-      break
-    case 'parallel':
-      async.parallel(tasks, callback)
-      break
-    default:
-      async.series(tasks, callback)
+  case 'series':
+    async.series(tasks, callback);
+    break;
+  case 'parallel':
+    async.parallel(tasks, callback);
+    break;
+  default:
+    async.series(tasks, callback);
   }
-}
+};
