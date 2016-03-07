@@ -69,8 +69,8 @@ module.exports = function distanceMatrix(options, callback) {
                  * @typedef {Object} Row
                  * @property {number} sourceId - source point id from original points array
                  * @property {number} destinationId - destination point id from original points array
-                 * @property {number} sourceCoordinate - `[lat, lon]` pair of the snapped coordinate
-                 * @property {number} destinationCoordinate - `[lat, lon]` pair of the snapped coordinate
+                 * @property {Array.<number>} sourceCoordinate - `[lat, lon]` pair of the snapped coordinate
+                 * @property {Array.<number>} destinationCoordinate - `[lat, lon]` pair of the snapped coordinate
                  * @property {number} time - travel time from the sourceCoordinates to
                  * destinationCoordinates. Values are given in 10th of a second.
                  */

@@ -33,8 +33,8 @@ Distance matrix row
 
 -   `sourceId` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** source point id from original points array
 -   `destinationId` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** destination point id from original points array
--   `sourceCoordinate` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** `[lat, lon]` pair of the snapped coordinate
--   `destinationCoordinate` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** `[lat, lon]` pair of the snapped coordinate
+-   `sourceCoordinate` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array).&lt;[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)>** `[lat, lon]` pair of the snapped coordinate
+-   `destinationCoordinate` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array).&lt;[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)>** `[lat, lon]` pair of the snapped coordinate
 -   `time` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** travel time from the sourceCoordinates to
     destinationCoordinates. Values are given in 10th of a second.
 
