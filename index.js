@@ -4,12 +4,35 @@ var R = require('ramda');
 var OSRM = require('osrm');
 var async = require('async');
 
+/**
+ * Calculate distance matrix
+ *
+ * @alias distanceMatrix
+ * @param {Object} options options
+ * @param {Array.<string>} options.points
+ * @param {string} options.osrmPath
+ * @param {taskCallback} options.taskCallback callback
+ * @param {number} options.chunkSize number of points in chunk
+ * @param {string} options.flow flow type (either `series` or `parallel` as in
+ * [async](https://github.com/caolan/async))
+ * @param {finalCallback} callback to be called when the matrices calculation
+ * is complete, with (error, result) arguments
+ * @returns {undefined} calls callback
+ */
 module.exports = function distanceMatrix(options, callback) {
   var points = options.points;
   var chunkSize = options.chunkSize || points.length;
   var osrmPath = options.osrmPath;
   var flow = options.flow || 'series';
 
+  /**
+    * This callback is called with every distance matrix chunk
+    *
+    * @callback taskCallback
+    * @param {Array<Row>} matrix distance matrix chunk
+    * @param {finalCallback} callback
+    * @returns {undefined} calls callback
+    */
   var taskCallback = options.taskCallback || function taskCallback(matrix, callback) {
     callback(null, matrix);
   };
@@ -41,11 +64,23 @@ module.exports = function distanceMatrix(options, callback) {
               sourceId = combination[0][srcIndex];
               destinationId = combination[1][dstIndex];
               if (sourceId !== destinationId) {
-                matrix.push([
-                  sourceId,
-                  destinationId,
-                  table.distance_table[srcIndex][dstIndex]
-                ]);
+                /**
+                 * Distance matrix row
+                 * @typedef {Object} Row
+                 * @property {number} sourceId - source point id from original points array
+                 * @property {number} destinationId - destination point id from original points array
+                 * @property {number} sourceCoordinate - `[lat, lon]` pair of the snapped coordinate
+                 * @property {number} destinationCoordinate - `[lat, lon]` pair of the snapped coordinate
+                 * @property {number} time - travel time from the sourceCoordinates to
+                 * destinationCoordinates. Values are given in 10th of a second.
+                 */
+                matrix.push({
+                  sourceId: sourceId,
+                  destinationId: destinationId,
+                  sourceCoordinate: table.source_coordinates[srcIndex],
+                  destinationCoordinate: table.destination_coordinates[dstIndex],
+                  time: table.distance_table[srcIndex][dstIndex]
+                });
               }
             }
           }
@@ -66,3 +101,11 @@ module.exports = function distanceMatrix(options, callback) {
     async.series(tasks, callback);
   }
 };
+
+/**
+ * This callback is called after all taskCallback is completed
+ *
+ * @callback finalCallback
+ * @param {Object} error any error thrown
+ * @param {Array} results results of calling taskCallback on every chunk
+ */
