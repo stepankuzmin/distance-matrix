@@ -1,0 +1,19 @@
+{
+  "name": "distance-matrix-pg-example",
+  "version": "1.0.0",
+  "description": "Calculate large distance matrix using The Open Source Routing Machine",
+  "main": "index.js",
+  "scripts": {
+    "db:migrate": "knex migrate:latest --knexfile ./db/config.js",
+    "start": "node --optimize_for_size --max_old_space_size=2048 --gc_interval=100 index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.ru)",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "0.10.0",
+    "minimist": "1.2.0",
+    "pg": "4.5.2",
+    "turf": "2.0.2"
+  }
+}
