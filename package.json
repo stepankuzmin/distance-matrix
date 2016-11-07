@@ -12,14 +12,14 @@
   "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.ru)",
   "license": "MIT",
   "dependencies": {
-    "async": "2.0.0-rc.1",
-    "osrm": "4.9.1",
-    "ramda": "0.20.1"
+    "async": "2.1.2",
+    "osrm": "5.4.2",
+    "ramda": "0.22.1"
   },
   "devDependencies": {
-    "documentation": "v4.0.0-beta",
-    "eslint": "2.6.0",
-    "eslint-config-mourner": "2.0.0",
-    "tape": "4.5.1"
+    "documentation": "4.0.0-beta12",
+    "eslint": "3.9.1",
+    "eslint-config-mourner": "2.0.1",
+    "tape": "4.6.2"
   }
 }
