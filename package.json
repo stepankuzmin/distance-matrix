@@ -20,6 +20,6 @@
     "documentation": "v4.0.0-beta",
     "eslint": "2.6.0",
     "eslint-config-mourner": "2.0.0",
-    "tape": "4.5.1"
+    "tape": "4.6.3"
   }
 }
