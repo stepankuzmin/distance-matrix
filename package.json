@@ -17,9 +17,9 @@
     "ramda": "0.23.0"
   },
   "devDependencies": {
-    "documentation": "v4.0.0-beta",
-    "eslint": "3.12.1",
-    "eslint-config-mourner": "2.0.0",
+    "documentation": "4.0.0-beta.18",
+    "eslint": "3.12.2",
+    "eslint-config-mourner": "2.0.1",
     "tape": "4.6.3"
   }
 }

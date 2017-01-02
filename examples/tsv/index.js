@@ -1,6 +1,7 @@
 'use strict';
 
 var turf = require('turf');
+var path = require('path');
 var distanceMatrix = require('../../index');
 
 var centroid, coordinates;
@@ -22,12 +23,14 @@ function taskCallback(matrix, callback) {
   callback(null);
 }
 
+var osrmPath = path.join(__dirname, '../../node_modules/osrm/test/data/berlin-latest.osrm');
+
 var options = {
   flow: 'parallel',
   points: points,
   chunkSize: 5,
   taskCallback: taskCallback,
-  osrmPath: '../../test/data/berlin-latest.osrm'
+  osrmPath: osrmPath
 };
 
 

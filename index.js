@@ -54,13 +54,13 @@ module.exports = function distanceMatrix(options, callback) {
     sources = combination[0].map(function (id) { return points[id]; });
     destinations = combination[1].map(function (id) { return points[id]; });
     return function task(callback) {
-      osrm.table({sources: sources, destinations: destinations}, function (error, table) {
+      osrm.table({coordinates: sources.concat(destinations)}, function (error, table) {
         if (error) {
           callback(error);
         } else {
           matrix = [];
-          for (srcIndex = 0; srcIndex < table.source_coordinates.length; srcIndex++) {
-            for (dstIndex = 0; dstIndex < table.destination_coordinates.length; dstIndex++) {
+          for (srcIndex = 0; srcIndex < table.sources.length; srcIndex++) {
+            for (dstIndex = 0; dstIndex < table.destinations.length; dstIndex++) {
               sourceId = combination[0][srcIndex];
               destinationId = combination[1][dstIndex];
               if (sourceId !== destinationId) {
@@ -77,9 +77,9 @@ module.exports = function distanceMatrix(options, callback) {
                 matrix.push({
                   sourceId: sourceId,
                   destinationId: destinationId,
-                  sourceCoordinate: table.source_coordinates[srcIndex],
-                  destinationCoordinate: table.destination_coordinates[dstIndex],
-                  time: table.distance_table[srcIndex][dstIndex]
+                  sourceCoordinate: table.sources[srcIndex].location,
+                  destinationCoordinate: table.destinations[dstIndex].location,
+                  time: table.durations[srcIndex][dstIndex]
                 });
               }
             }
