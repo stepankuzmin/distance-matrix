@@ -14,7 +14,7 @@
   "dependencies": {
     "async": "2.1.4",
     "osrm": "5.5.2",
-    "ramda": "0.20.1"
+    "ramda": "0.23.0"
   },
   "devDependencies": {
     "documentation": "v4.0.0-beta",
