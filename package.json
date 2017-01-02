@@ -12,7 +12,7 @@
   "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.ru)",
   "license": "MIT",
   "dependencies": {
-    "async": "2.0.0-rc.1",
+    "async": "2.1.4",
     "osrm": "5.5.2",
     "ramda": "0.20.1"
   },
