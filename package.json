@@ -1,6 +1,6 @@
 {
   "name": "distance-matrix",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Calculate large distance matrix using The Open Source Routing Machine",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "async": "2.4.0",
-    "osrm": "5.6.5",
+    "osrm": "5.7.0",
     "ramda": "0.23.0"
   },
   "devDependencies": {
