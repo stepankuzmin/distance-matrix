@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "documentation": "5.1.1",
-    "eslint": "4.3.0",
+    "eslint": "4.4.0",
     "eslint-config-mourner": "2.0.1",
     "tape": "4.8.0"
   }
