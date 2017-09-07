@@ -19,7 +19,7 @@
   "devDependencies": {
     "documentation": "5.2.2",
     "eslint": "4.6.0",
-    "eslint-config-mourner": "2.0.1",
+    "eslint-config-mourner": "2.0.2",
     "tape": "4.8.0"
   }
 }
