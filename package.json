@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "async": "2.6.0",
-    "osrm": "5.15.2",
+    "osrm": "5.21.0",
     "ramda": "0.26.0"
   },
   "devDependencies": {
