@@ -2,6 +2,8 @@
   "name": "distance-matrix",
   "version": "1.1.2",
   "description": "Calculate large distance matrix using The Open Source Routing Machine",
+  "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.com)",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "preinstall": "npm prune",
@@ -9,8 +11,6 @@
     "lint": "eslint .",
     "test": "node test/index.js"
   },
-  "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.ru)",
-  "license": "MIT",
   "dependencies": {
     "async": "^2.6.2",
     "osrm": "^5.22.0",
