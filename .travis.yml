@@ -2,16 +2,16 @@ dist: trusty
 addons:
   apt:
     sources:
-     - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
     packages:
-     - coreutils
-     - g++-4.8
-     - gdb
+      - coreutils
+      - g++-4.8
+      - gdb
 
 language: node_js
 
 node_js:
-  - 4
+  - "10"
 
 script:
   - make test
