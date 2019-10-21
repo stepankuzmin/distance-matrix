@@ -11,7 +11,7 @@
   "author": "Stepan Kuzmin <to.stepan.kuzmin@gmail.com> (stepankuzmin.ru)",
   "license": "MIT",
   "dependencies": {
-    "knex": "0.10.0",
+    "knex": "0.19.5",
     "minimist": "1.2.0",
     "pg": "4.5.2",
     "turf": "2.0.2"
