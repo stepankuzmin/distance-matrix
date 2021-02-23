@@ -1,7 +1,6 @@
 # OSRM distance matrix
 
 [![Build Status](https://travis-ci.org/stepankuzmin/distance-matrix.svg?branch=master)](https://travis-ci.org/stepankuzmin/distance-matrix)
-[![Greenkeeper badge](https://badges.greenkeeper.io/stepankuzmin/distance-matrix.svg)](https://greenkeeper.io/)
 
 **Warning**: this is experimental.
 
